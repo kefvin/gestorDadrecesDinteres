@@ -1,6 +1,14 @@
 package Segon.gestorDadrecesDinteres;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -48,7 +56,7 @@ public class SampleController {
 		TextInputDialog ventanEmergente = new TextInputDialog("Walter White");
 		ventanEmergente.setTitle("Tens tot Internet davant teu!");
 		ventanEmergente.setHeaderText("On vols anar?");
-		ventanEmergente.setContentText("Entra la teva url: htt://");
+		ventanEmergente.setContentText("Entra la teva url: http://");
 
 		// Optional puede o no puede contener un valor no nulo
 		Optional<String> result = ventanEmergente.showAndWait();
@@ -59,14 +67,17 @@ public class SampleController {
 			// Comprovar si la url existe o por ejemplo conectarme a la url y buscar el titulo
 			try {
 				//      www.google.es
-				
 				Document doc = Jsoup.connect("http://"+url).get();
 				String title = doc.title();
-				String categoria;
+				if(!title.equals(null)){
+					String categoria;
 
-				observableWebs.add(new UrlGuardada(title, url, retornaCategoriaWeb(title)));
-				///taula.setItems(observableWebs);
-				
+					observableWebs.add(new UrlGuardada(title, url, categories[categories.length-1]));
+				}
+				guardar();
+			}catch(UnknownHostException e){
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}catch(MalformedURLException e){
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -79,19 +90,7 @@ public class SampleController {
 		// (por si se ha editado el nombre)ir a la pagina, buscar el titulo, introducirlo en
 		// la tabla y buscar si tiene categoria. Por ultimo cargar la tabla.
 	}
-	// Event Listener on Button[#Editar].onMouseClicked
-	private String retornaCategoriaWeb(String pagina){
-		/*for(Categoria categoria: categoriesList){
-			String[] categoriesArray = categoria.getPagines();
-			for(int i=0;i<categoriesArray.length;i++){
-				if(categoriesArray[i].contains(pagina)){
-					return categoria.getNom();
-				}
-			}
-		}*/
-		return null;
-	}
-	
+
 	@FXML
 	public void Editar(MouseEvent event) {
 		// Abrir ventana
@@ -115,6 +114,7 @@ public class SampleController {
 						
 					}
 				});
+				guardar();
 	}
 	// Event Listener on Button[#Borrar].onMouseClicked
 	@FXML
@@ -122,8 +122,44 @@ public class SampleController {
 		// Eliminar descripcion y url
 		UrlGuardada fila = taula.getSelectionModel().getSelectedItem();
 		observableWebs.remove(fila);
+		guardar();
 	}
 	
+	private void cargar(){
+		
+			FileInputStream arxiu;
+			try {
+			arxiu = new FileInputStream("D:\\clase\\2DAW\\Programacio\\Git\\gestorDadrecesDinteres\\historial");
+			ObjectInputStream dadesGuardades = new ObjectInputStream(arxiu);
+			observableWebs = (ObservableList<UrlGuardada>) dadesGuardades.readObject();
+			arxiu.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void guardar() {
+		FileOutputStream arxiu;
+		try {
+			arxiu = new FileOutputStream("D:\\clase\\2DAW\\Programacio\\Git\\gestorDadrecesDinteres\\historial");
+			ObjectOutputStream guarda  = new ObjectOutputStream(arxiu);
+			guarda.writeObject(observableWebs);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 	public void initialize(){
@@ -136,8 +172,14 @@ public class SampleController {
 		
 		/* Introducir categorias, paginas con categoría y crear una funcion con un switch que cada caso 
 		 * sea una categoría*/
-		observableWebs =  FXCollections.observableArrayList();	
-		taula.setItems(observableWebs);
+		File guardaSoldats = new File("D:\\clase\\2DAW\\Programacio\\Git\\gestorDadrecesDinteres\\historial");
+		if(guardaSoldats.exists()){
+			cargar();
+			guardaSoldats.delete();
+		}else{
+			observableWebs =  FXCollections.observableArrayList();	
+			taula.setItems(observableWebs);
+		}
 		
 	}
 }
