@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="448.0" prefWidth="630.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Segon.gestorDadrecesDinteres.SampleController">
+   <children>
+      <Button fx:id="Afegir" layoutX="20.0" layoutY="64.0" mnemonicParsing="false" onMouseClicked="#Afegir" style="-fx-background-color: blue;" text="Afegir" textFill="#fcfcfc" />
+      <Button fx:id="Editar" layoutX="72.0" layoutY="64.0" mnemonicParsing="false" onMouseClicked="#Editar" style="-fx-background-color: green;" text="Editar" textFill="WHITE" />
+      <Button fx:id="Borrar" layoutX="124.0" layoutY="64.0" mnemonicParsing="false" onMouseClicked="#Borrar" style="-fx-background-color: red;" text="Borrar" textFill="WHITE" />
+      <TableView fx:id="taula" layoutX="20.0" layoutY="102.0" prefHeight="332.0" prefWidth="591.0">
+        <columns>
+          <TableColumn fx:id="taulaDescripcio" prefWidth="269.0" text="Descripcio" />
+          <TableColumn fx:id="taulaUrl" minWidth="0.0" prefWidth="227.0" text="URL" />
+            <TableColumn fx:id="taulaCategoria" prefWidth="94.0" text="Categoria" />
+        </columns>
+      </TableView>
+      <Label layoutX="206.0" layoutY="14.0" prefHeight="35.0" prefWidth="218.0" text="Gestor d'adreces d'interés">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
